@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>AI Content Studio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-cover bg-center bg-fixed min-h-screen text-white"
+style="background-image:url('https://images.unsplash.com/photo-1555949963-aa79dcee981c?auto=format&fit=crop&w=1600&q=80');">
+
+<div class="min-h-screen bg-black/60">
+
+    <!-- NAVBAR -->
+    <nav class="flex justify-between items-center px-10 py-6">
+
+        <div>
+            <h1 class="text-3xl font-bold bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">
+                 AI Content Studio
+            </h1>
+        </div>
+
+        <div class="flex items-center gap-4">
+
+            {% if current_user.is_authenticated %}
+
+            <span class="text-cyan-300 font-semibold">
+                 {{ current_user.username }}
+            </span>
+
+            <a href="/history"
+               class="px-5 py-2 rounded-full bg-purple-600 hover:bg-purple-700 hover:scale-105 transition duration-300 shadow-lg">
+                📜 History
+            </a>
+
+            <a href="/logout"
+               class="px-5 py-2 rounded-full bg-red-600 hover:bg-red-700 hover:scale-105 transition duration-300 shadow-lg">
+                Logout
+            </a>
+
+            {% else %}
+
+            <a href="/login"
+               class="px-5 py-2 rounded-full bg-blue-600 hover:bg-blue-700 hover:scale-105 transition duration-300 shadow-lg">
+                Login
+            </a>
+
+            <a href="/signup"
+               class="px-5 py-2 rounded-full bg-green-600 hover:bg-green-700 hover:scale-105 transition duration-300 shadow-lg">
+                Sign Up
+            </a>
+
+            {% endif %}
+
+        </div>
+
+    </nav>
+
+    <!-- HERO SECTION -->
+    <div class="flex flex-col items-center text-center px-6">
+
+        <h1 class="text-5xl font-extrabold mt-12">
+            AI-Powered Content Studio
+        </h1>
+
+        <p class="text-xl text-gray-300 mt-5 max-w-2xl">
+            Generate professional, detailed and SEO-ready articles
+            instantly using Generative AI technology.
+        </p>
+
+        <!-- STATS -->
+        <div class="grid md:grid-cols-3 gap-4 mt-10 w-full max-w-2xl">
+
+            <div class="bg-white/10 backdrop-blur-xl p-4 rounded-3xl border border-white/10 shadow-xl hover:scale-105 transition">
+                <h2 class="text-4xl font-bold text-cyan-400">AI</h2>
+                <p class="text-gray-300 mt-2">Powered Generation</p>
+            </div>
+
+            <div class="bg-white/10 backdrop-blur-xl p-4 rounded-3xl border border-white/10 shadow-xl hover:scale-105 transition">
+                <h2 class="text-4xl font-bold text-green-400">TXT</h2>
+                <p class="text-gray-300 mt-2">Download Support</p>
+            </div>
+
+            <div class="bg-white/10 backdrop-blur-xl p-4 rounded-3xl border border-white/10 shadow-xl hover:scale-105 transition">
+                <h2 class="text-text-2xl font-bold text-purple-400">PDF</h2>
+                <p class="text-gray-300 mt-2">Export Articles</p>
+            </div>
+
+        </div>
+
+        <!-- FORM -->
+        <form method="POST"
+              class="mt-12 bg-white/10 backdrop-blur-2xl border border-white/10 p-7 rounded-[30px] shadow-2xl w-full max-w-3xl">
+
+            <h2 class="text-2xl font-semibold mb-5">
+                Generate New Article
+            </h2>
+
+            <input
+                type="text"
+                name="topic"
+                placeholder="🚀 Enter article topic..."
+                required
+                class="w-full p-5 rounded-2xl bg-black/30 border border-white/10 text-white placeholder-gray-400 focus:ring-2 focus:ring-cyan-400 outline-none">
+
+            <button
+                type="submit"
+                class="mt-6 w-full bg-gradient-to-r from-cyan-500 to-blue-600 py-4 rounded-2xl text-lg font-semibold hover:scale-105 transition duration-300 shadow-xl">
+
+                Generate Article
+            </button>
+
+        </form>
+
+        <!-- ARTICLE OUTPUT -->
+        {% if article %}
+
+        <div class="mt-12 w-full max-w-5xl bg-white/10 backdrop-blur-2xl border border-white/10 p-10 rounded-[30px] shadow-2xl">
+
+            <div class="flex flex-col md:flex-row justify-between md:items-center gap-4">
+
+                <h2 class="text-3xl font-bold text-green-400">
+                    Generated Article
+                </h2>
+
+                <div class="text-sm text-gray-300">
+                    Words: {{ article.split()|length }}
+                </div>
+
+            </div>
+
+            <hr class="my-6 border-white/10">
+
+            <div id="article-content"
+                 class="text-gray-200 whitespace-pre-wrap leading-8 text-lg">
+
+                {{ article }}
+
+            </div>
+
+            <!-- ACTION BUTTONS -->
+            <div class="flex flex-wrap gap-4 mt-8">
+
+                <button
+                    type="button"
+                    onclick="copyArticle()"
+                    class="bg-cyan-600 hover:bg-cyan-700 px-6 py-3 rounded-xl transition">
+
+                    📋 Copy Article
+                </button>
+
+                <!-- DOWNLOAD FORM -->
+                <form action="/save" method="POST" class="flex gap-3">
+
+                    <input
+                        type="hidden"
+                        name="article"
+                        value="{{ article }}">
+
+                    <select
+                        name="format"
+                        class="bg-gray-800 text-white px-4 py-3 rounded-xl">
+
+                        <option value="txt">TXT</option>
+                        <option value="pdf">PDF</option>
+
+                    </select>
+
+                    <button
+                        type="submit"
+                        class="bg-green-600 hover:bg-green-700 px-6 py-3 rounded-xl transition">
+
+                        💾 Download
+                    </button>
+
+                </form>
+
+            </div>
+
+        </div>
+
+        {% endif %}
+
+        <!-- FEATURES -->
+        <div class="grid md:grid-cols-3 gap-6 mt-16 mb-20 w-full max-w-6xl">
+
+            <div class="bg-white/10 backdrop-blur-xl p-6 rounded-3xl border border-white/10">
+                <h3 class="text-xl font-bold text-cyan-400">
+                    ⚡ Fast Generation
+                </h3>
+
+                <p class="text-gray-300 mt-3">
+                    Generate articles within seconds using modern AI models.
+                </p>
+            </div>
+
+            <div class="bg-white/10 backdrop-blur-xl p-6 rounded-3xl border border-white/10">
+                <h3 class="text-xl font-bold text-green-400">
+                    📄 Export Options
+                </h3>
+
+                <p class="text-gray-300 mt-3">
+                    Save generated content as TXT or PDF format.
+                </p>
+            </div>
+
+            <div class="bg-white/10 backdrop-blur-xl p-6 rounded-3xl border border-white/10">
+                <h3 class="text-xl font-bold text-purple-400">
+                    🤖 AI Powered
+                </h3>
+
+                <p class="text-gray-300 mt-3">
+                    Uses state-of-the-art LLMs for content creation.
+                </p>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+
+function copyArticle() {
+
+    const text =
+    document.getElementById("article-content").innerText;
+
+    navigator.clipboard.writeText(text);
+
+    alert("Article Copied Successfully!");
+
+}
+
+</script>
+
+</body>
+</html>
