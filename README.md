@@ -25,8 +25,8 @@ Users can sign up, log in, generate articles on any topic, save history, and exp
 - Flask-Login
 - Groq API (LLM)
 - SQLite Database
-- ReportLab (PDF generation)
-- HTML Templates (Jinja2)
+- ReportLab (
+- HTML 
 
 🔥 How it works
 User enters topic
