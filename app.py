@@ -55,7 +55,7 @@ def load_user(user_id):
 # ================= AI FUNCTION =================
 def generate_article(topic):
     response = client.chat.completions.create(
-        model="llama-3.3-70b-versatile",
+        model="openai/gpt-oss-120b",
         messages=[
             {"role": "user", "content": f"Write a detailed article on {topic}"}
         ]
