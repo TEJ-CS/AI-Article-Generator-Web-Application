@@ -54,12 +54,64 @@ def load_user(user_id):
 
 # ================= AI FUNCTION =================
 def generate_article(topic):
+    prompt = f"""
+Write a comprehensive, professional, and well-structured article on the topic:
+
+"{topic}"
+
+Follow this EXACT structure. Do NOT skip any section.
+
+# 1. Executive Summary
+
+# 2. Historical Milestones (1950-2000)
+
+# 3. The Turn-of-the-Century Surge (2000-2015)
+
+# 4. Drivers of Contemporary Growth (2015-2026)
+
+# 5. Geographic Hotspots & Regional Dynamics
+
+# 6. Key Sub-Sectors and Their Evolution
+
+# 7. Emerging Technologies Shaping the Next Wave
+
+# 8. Challenges & Risks Facing the Industry
+
+# 9. Future Outlook (2027-2035)
+
+# 10. Conclusion
+
+Instructions:
+-Each section should contain only ONE short paragraph (80–120 words).
+- Generate ALL 10 sections.
+- Never skip the Conclusion.
+- Use clear markdown headings.
+- Each section should contain 2–4 informative paragraphs.
+- Write in professional but easy-to-understand English.
+- If the response becomes too long, make each section shorter instead of omitting any section.
+- End the article only after completing Section 10: Conclusion.
+"""
+
     response = client.chat.completions.create(
         model="openai/gpt-oss-120b",
         messages=[
-            {"role": "user", "content": f"Write a detailed article on {topic}"}
-        ]
+            {
+                "role": "system",
+                "content": (
+                    "You are an expert research article writer. "
+                    "Always follow the user's requested structure exactly. "
+                    "Never skip any requested section."
+                )
+            },
+            {
+                "role": "user",
+                "content": prompt
+            }
+        ],
+        temperature=0.7,
+        max_completion_tokens=3500
     )
+
     return response.choices[0].message.content
 
 
